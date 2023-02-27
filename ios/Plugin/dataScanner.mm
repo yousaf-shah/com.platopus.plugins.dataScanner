@@ -48,8 +48,8 @@ class dataScanner
 	public:
 		static int show( lua_State *L );
         static int hide( lua_State *L );
-        static int startScaning( lua_State *L );
-        static int stopScaning( lua_State *L );
+        static int startScanning( lua_State *L );
+        static int stopScanning( lua_State *L );
         static int scanningIsSupported( lua_State *L );
         static int scanningIsAvailable( lua_State *L );
 
@@ -95,8 +95,8 @@ dataScanner::Open( lua_State *L )
 	{
 		{ "show", show },
         { "hide", hide },
-        { "startScaning", startScaning },
-        { "stopScaning", stopScaning },
+        { "startScanning", startScanning },
+        { "stopScanning", stopScanning },
         { "scanningIsSupported", scanningIsSupported },
         { "scanningIsAvailable", scanningIsAvailable },
 
@@ -145,13 +145,12 @@ dataScanner::show( lua_State *L )
         BOOL scanningAvailable = [myTest scanningIsAvailable];
         
         if(not scanningSupported or not scanningAvailable) {
-            lua_pushboolean(L, false);
+            lua_pushboolean(L, 0);
             return 1;
         }
        
     } else {
-        
-        lua_pushboolean(L, false);
+        lua_pushboolean(L, 0);
         return 1;
     }
     
@@ -208,7 +207,7 @@ dataScanner::show( lua_State *L )
         CoronaLuaDispatchEvent(myHolder.myLuaState, myHolder.myRef, 0);
     }];
 
-    lua_pushboolean(L, true);
+    lua_pushboolean(L, 1);
 	return 1;
 }
 
@@ -223,7 +222,7 @@ dataScanner::hide( lua_State *L )
 }
 
 int
-dataScanner::startScaning( lua_State *L )
+dataScanner::startScanning( lua_State *L )
 {
     if(myHolder.myScanner){
         [myHolder.myScanner startScanning];
@@ -232,7 +231,7 @@ dataScanner::startScaning( lua_State *L )
 }
 
 int
-dataScanner::stopScaning( lua_State *L )
+dataScanner::stopScanning( lua_State *L )
 {
     if(myHolder.myScanner){
         [myHolder.myScanner stopScanning];
@@ -246,7 +245,7 @@ dataScanner::scanningIsSupported( lua_State *L )
     
     DataScannerTest * myTest = [[DataScannerTest alloc] init];
     BOOL scanningSupported = [myTest scanningIsSupported];
-    lua_pushboolean(L, scanningSupported);
+    lua_pushboolean(L, scanningSupported ? 1 : 0);
     return 1;
 
 }
@@ -257,7 +256,7 @@ dataScanner::scanningIsAvailable( lua_State *L )
     
     DataScannerTest * myTest = [[DataScannerTest alloc] init];
     BOOL scanningAvailable = [myTest scanningIsAvailable];
-    lua_pushboolean(L, scanningAvailable);
+    lua_pushboolean(L, scanningAvailable ? 1 : 0);
     return 1;
 }
 

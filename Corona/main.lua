@@ -15,7 +15,9 @@ scannerShow = widget.newButton( {
         label = "Show Scanner\n(Tap Text/Barcodes to scan)",
         onEvent = function ( e )
                 if (e.phase == "ended") then
+                
                         print("PHASE:ended")
+                        
                         local scannerOk = dataScanner.show{
                             listener=function(e)
                                 print(json.encode(e))
@@ -26,12 +28,20 @@ scannerShow = widget.newButton( {
                             barCodeSupport = true,
                             textSupport = false,
                         }
-                        print("ScannerOK: "..tostring(scannerOk))
-                        dataScanner.startScaning()
+                        
+                        print("ScannerOK: " .. tostring(scannerOk))
+                        print(type(scannerOk))
+                        
+                        if(scannerOk) then
+                            print("StartScanning")
+                            dataScanner.startScanning()
+                        end
+                        
                         timer.performWithDelay(10000, function()
                             -- dataScanner.hide()
-                            -- dataScanner.stopScaning()
+                            -- dataScanner.stopScanning()
                         end, 1)
+                        
                 end
         end
 } )
