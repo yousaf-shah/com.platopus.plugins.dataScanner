@@ -2,11 +2,13 @@
 
 This Solar2D plugin is uses the iOS [DataScannerViewController](https://developer.apple.com/documentation/visionkit/datascannerviewcontroller) pop up to scan and **tap on** text and barcodes to get information you can use in your app.
 
-This plugin also shows how to communiccate via Lua<->Objc<->Swift
+This plugin also shows how to communicate via Lua<->Objc<->Swift
 
 Note this plugin should be used with devices with iOS/iPadOS 16+ and you need `NSCameraUsageDescription` in plist. 
 
 See `demo` project included in repo.
+
+Developed with Scott Harrison @scottrules44 - big thanks for the Lua - ObjC - Swift Bridge work!!
 
 
 ## APIs
