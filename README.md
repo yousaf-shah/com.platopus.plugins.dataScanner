@@ -4,36 +4,46 @@ This Solar2D plugin is uses the iOS [DataScannerViewController](https://develope
 
 This plugin also shows how to communicate via Lua<->Objc<->Swift
 
-Note this plugin should be used with devices with iOS/iPadOS 16+ and you need `NSCameraUsageDescription` in plist. 
+Developed with Scott Harrison @scottrules44 - big high five 🙌 for the Lua - ObjC - Swift Bridge work!!
 
-See `demo` project included in repo.
+## Restrictions
 
-Developed with Scott Harrison @scottrules44 - big thanks for the Lua - ObjC - Swift Bridge work!!
+This plugin will only work with iOS/iPadOS 16+, a device with at least a Bionic A12 processor, and you need a `NSCameraUsageDescription` in your app's plist. 
+The Bionic A12 was first used in iPhone XS and XS Max, iPhone XR, iPad Air (3rd generation), iPad Mini (5th generation), 8th generation iPad.
+Devices before these will return a false from `dataScanner.show` and `dataScanner.scanningIsSupported` so you should warn users of this to avoid frustration!
 
-
-## APIs
+## Example
 
 ```
 local dataScanner = require "plugin.dataScanner"
 
+local scannerOk = dataScanner.show{
 
-dataScanner.show{
-listener=function(event)
-    print(json.encode(event))
-end,
-highFrameRateTrackingEnabled = true, -- default false
-highlightingEnabled = true, -- default false
-recognizesMultipleItems = true, -- default false
-barCodeSupport = true, -- default false
-textSupport = true, -- default false
-} --Show scanner view
+	listener = datascanner.listener ,
+	highFrameRateTrackingEnabled = true,
+	highlightingEnabled = true,
+	recognizesMultipleItems = false,
+	barCodeSupport = true,
+	textSupport = false,
 
+}
 
-dataScanner.startScaning()--start the scanner
+if scannerOk then
 
-dataScanner.stopScaning()--stop the scanner
-dataScanner.hide()--hides the scanner (and stops the scanner)
+	dataScanner.startScanning()
 
+end
+```
+
+Functions included:
+
+```
+(Boolean) scanningOK = dataScanner.show{ listener, highFrameRateTrackingEnabled, highlightingEnabled, recognizesMultipleItems, barCodeSupport, textSupport }
+dataScanner.startScanning()  --start the scanner (if you get a true back from dataScanner.show)
+dataScanner.stopScanning()  --stop the scanner
+dataScanner.hide(). --hides the scanner (and stops the scanner)
+(Boolean) isSupported = dataScanner.scanningIsSupported()  -- is the device capable of using the scanner?  (see restrictions below)
+(Boolean) isAvailable = dataScanner.scanningIsAvailable()  -- does the app have permission - i.e. NSCameraUsageDescription & the user approved the camera usage
 ```
 
 ## Events
@@ -41,10 +51,10 @@ dataScanner.hide()--hides the scanner (and stops the scanner)
 The following events are returned with  `dataScanner.show{listener}` 
 
 `event.status` will return the following options
-- showDataScanner
-- closeDataScanner
-- textScan
-- barcodeScan
+- showDataScanner  -- the scanner was shown
+- closeDataScanner  -- the scanner was closed
+- textScan  -- received a text scan
+- barcodeScan  -- received a barcode
 
 `event.data` for event.status "textScan" or "barcodeScan" will return a string of the scanned data
 
@@ -59,7 +69,7 @@ settings =
 		xcassets = "Images.xcassets",
 		plist =
 		{
-			NSCameraUsageDescription="Need for Camera Scanning",
+			NSCameraUsageDescription = "This App needs the camera for text / barcode scanning",
 			UILaunchStoryboardName = "LaunchScreen",
 		},
 	},
